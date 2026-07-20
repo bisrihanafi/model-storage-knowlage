@@ -1,0 +1,34 @@
+# =========================================================================
+# rules.txt - Definisi aturan komposisi (relasi turunan)
+# =========================================================================
+# Format:
+#   CHAIN|namaAturan|predikat1|predikat2|excludeSelf(true/false)
+#   TRANSITIVE|namaAturan|predikat
+#
+# predikat1/predikat2 boleh berupa predikat mentah (langsung dari data)
+# ATAU nama aturan lain (sehingga aturan bisa bertingkat).
+# Baris diawali '#' = komentar, diabaikan.
+# =========================================================================
+
+# --- Domain: Silsilah Keluarga ---
+#Gen 1:  Hasan ═══ Fatimah
+#              │
+#   ┌──────────┼──────────────┐
+#Gen 2: Rahman═Yuni    Salamah═Dedi    Karim═Nita
+#          │               │              │
+#   ┌──────┴──────┐        │       ┌──────┴──────┐
+#Gen 3: Agus═Citra  Bella═Doni    Eka═Farhan  Gilang═Ira  Hana═Joko
+#         │            │             │           │           │
+#Gen 4: Kevin,Lina    Made          Nadia       Oscar      Putri,Qori
+#
+#
+CHAIN|kakek/nenek dari|anak dari|anak dari|false
+CHAIN|cucu dari|orang tua dari|orang tua dari|false
+CHAIN|saudara dari|anak dari|orang tua dari|true
+CHAIN|mertua dari|menikah dengan|anak dari|false
+CHAIN|paman/bibi dari|anak dari|saudara dari|false
+CHAIN|keponakan dari|saudara dari|orang tua dari|false
+CHAIN|besan dengan|orang tua dari|mertua dari|false
+
+# --- Domain: Komposisi Bahan / Bill of Materials ---
+TRANSITIVE|semua bahan dari|mengandung

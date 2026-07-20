@@ -1,0 +1,124 @@
+NEURON|Kue Coklat|Produk akhir - kue coklat dua lapis dengan topping ganache
+NEURON|Adonan Dasar|Campuran adonan dasar sebelum dipanggang
+NEURON|Ganache|Lapisan topping cokelat di atas kue
+NEURON|Tepung Terigu|Bahan dasar tepung protein sedang
+NEURON|Gula Pasir|Pemanis utama adonan
+NEURON|Telur|Bahan pengikat dan pengembang adonan
+NEURON|Mentega|Bahan lemak untuk tekstur adonan
+NEURON|Coklat Batang|Bahan dasar cokelat untuk ganache
+NEURON|Krim Kental|Bahan cair pencampur ganache
+NEURON|Susu Sapi|Bahan dasar pembuatan krim kental
+NEURON|Kakao|Bahan dasar pembuatan coklat batang
+LINK|Kue Coklat|mengandung|Adonan Dasar|1.0
+LINK|Kue Coklat|mengandung|Ganache|1.0
+LINK|Adonan Dasar|mengandung|Tepung Terigu|1.0
+LINK|Adonan Dasar|mengandung|Gula Pasir|1.0
+LINK|Adonan Dasar|mengandung|Telur|1.0
+LINK|Adonan Dasar|mengandung|Mentega|1.0
+LINK|Ganache|mengandung|Coklat Batang|1.0
+LINK|Ganache|mengandung|Krim Kental|1.0
+LINK|Krim Kental|mengandung|Susu Sapi|1.0
+LINK|Coklat Batang|mengandung|Kakao|1.0
+NEURON|Hasan|Generasi 1 - Kepala keluarga besar, lahir 1940
+NEURON|Fatimah|Generasi 1 - Istri Hasan, lahir 1943
+NEURON|Rahman|Generasi 2 - Anak pertama Hasan & Fatimah, lahir 1965
+NEURON|Yuni|Generasi 2 - Istri Rahman, menantu Hasan & Fatimah, lahir 1967
+NEURON|Salamah|Generasi 2 - Anak kedua Hasan & Fatimah, lahir 1968
+NEURON|Dedi|Generasi 2 - Suami Salamah, menantu Hasan & Fatimah, lahir 1966
+NEURON|Karim|Generasi 2 - Anak ketiga Hasan & Fatimah, lahir 1971
+NEURON|Nita|Generasi 2 - Istri Karim, menantu Hasan & Fatimah, lahir 1973
+NEURON|Agus|Generasi 3 - Anak pertama Rahman & Yuni, lahir 1990
+NEURON|Citra|Generasi 3 - Istri Agus, lahir 1992
+NEURON|Bella|Generasi 3 - Anak kedua Rahman & Yuni, lahir 1993
+NEURON|Doni|Generasi 3 - Suami Bella, lahir 1991
+NEURON|Eka|Generasi 3 - Anak tunggal Salamah & Dedi, lahir 1994
+NEURON|Farhan|Generasi 3 - Suami Eka, lahir 1993
+NEURON|Gilang|Generasi 3 - Anak pertama Karim & Nita, lahir 1996
+NEURON|Ira|Generasi 3 - Istri Gilang, lahir 1997
+NEURON|Hana|Generasi 3 - Anak kedua Karim & Nita, lahir 1999
+NEURON|Joko|Generasi 3 - Suami Hana, lahir 1998
+NEURON|Kevin|Generasi 4 - Anak pertama Agus & Citra, lahir 2015
+NEURON|Lina|Generasi 4 - Anak kedua Agus & Citra, lahir 2018
+NEURON|Made|Generasi 4 - Anak tunggal Bella & Doni, lahir 2017
+NEURON|Nadia|Generasi 4 - Anak tunggal Eka & Farhan, lahir 2019
+NEURON|Oscar|Generasi 4 - Anak tunggal Gilang & Ira, lahir 2020
+NEURON|Putri|Generasi 4 - Anak pertama Hana & Joko, lahir 2021
+NEURON|Qori|Generasi 4 - Anak kedua Hana & Joko, lahir 2023
+LINK|Hasan|menikah dengan|Fatimah|2.0
+LINK|Fatimah|menikah dengan|Hasan|2.0
+LINK|Rahman|menikah dengan|Yuni|2.0
+LINK|Yuni|menikah dengan|Rahman|2.0
+LINK|Salamah|menikah dengan|Dedi|2.0
+LINK|Dedi|menikah dengan|Salamah|2.0
+LINK|Karim|menikah dengan|Nita|2.0
+LINK|Nita|menikah dengan|Karim|2.0
+LINK|Agus|menikah dengan|Citra|2.0
+LINK|Citra|menikah dengan|Agus|2.0
+LINK|Bella|menikah dengan|Doni|2.0
+LINK|Doni|menikah dengan|Bella|2.0
+LINK|Eka|menikah dengan|Farhan|2.0
+LINK|Farhan|menikah dengan|Eka|2.0
+LINK|Gilang|menikah dengan|Ira|2.0
+LINK|Ira|menikah dengan|Gilang|2.0
+LINK|Hana|menikah dengan|Joko|2.0
+LINK|Joko|menikah dengan|Hana|2.0
+LINK|Hasan|orang tua dari|Rahman|2.0
+LINK|Hasan|orang tua dari|Salamah|2.0
+LINK|Hasan|orang tua dari|Karim|2.0
+LINK|Fatimah|orang tua dari|Rahman|2.0
+LINK|Fatimah|orang tua dari|Salamah|2.0
+LINK|Fatimah|orang tua dari|Karim|2.0
+LINK|Rahman|anak dari|Hasan|2.0
+LINK|Rahman|anak dari|Fatimah|2.0
+LINK|Salamah|anak dari|Hasan|2.0
+LINK|Salamah|anak dari|Fatimah|2.0
+LINK|Karim|anak dari|Hasan|2.0
+LINK|Karim|anak dari|Fatimah|2.0
+LINK|Rahman|orang tua dari|Agus|2.0
+LINK|Rahman|orang tua dari|Bella|2.0
+LINK|Yuni|orang tua dari|Agus|2.0
+LINK|Yuni|orang tua dari|Bella|2.0
+LINK|Agus|anak dari|Rahman|2.0
+LINK|Agus|anak dari|Yuni|2.0
+LINK|Bella|anak dari|Rahman|2.0
+LINK|Bella|anak dari|Yuni|2.0
+LINK|Salamah|orang tua dari|Eka|2.0
+LINK|Dedi|orang tua dari|Eka|2.0
+LINK|Eka|anak dari|Salamah|2.0
+LINK|Eka|anak dari|Dedi|2.0
+LINK|Karim|orang tua dari|Gilang|2.0
+LINK|Karim|orang tua dari|Hana|2.0
+LINK|Nita|orang tua dari|Gilang|2.0
+LINK|Nita|orang tua dari|Hana|2.0
+LINK|Gilang|anak dari|Karim|2.0
+LINK|Gilang|anak dari|Nita|2.0
+LINK|Hana|anak dari|Karim|2.0
+LINK|Hana|anak dari|Nita|2.0
+LINK|Agus|orang tua dari|Kevin|2.0
+LINK|Agus|orang tua dari|Lina|2.0
+LINK|Citra|orang tua dari|Kevin|2.0
+LINK|Citra|orang tua dari|Lina|2.0
+LINK|Kevin|anak dari|Agus|2.0
+LINK|Kevin|anak dari|Citra|2.0
+LINK|Lina|anak dari|Agus|2.0
+LINK|Lina|anak dari|Citra|2.0
+LINK|Bella|orang tua dari|Made|2.0
+LINK|Doni|orang tua dari|Made|2.0
+LINK|Made|anak dari|Bella|2.0
+LINK|Made|anak dari|Doni|2.0
+LINK|Eka|orang tua dari|Nadia|2.0
+LINK|Farhan|orang tua dari|Nadia|2.0
+LINK|Nadia|anak dari|Eka|2.0
+LINK|Nadia|anak dari|Farhan|2.0
+LINK|Gilang|orang tua dari|Oscar|2.0
+LINK|Ira|orang tua dari|Oscar|2.0
+LINK|Oscar|anak dari|Gilang|2.0
+LINK|Oscar|anak dari|Ira|2.0
+LINK|Hana|orang tua dari|Putri|2.0
+LINK|Joko|orang tua dari|Putri|2.0
+LINK|Hana|orang tua dari|Qori|2.0
+LINK|Joko|orang tua dari|Qori|2.0
+LINK|Putri|anak dari|Hana|2.0
+LINK|Putri|anak dari|Joko|2.0
+LINK|Qori|anak dari|Hana|2.0
+LINK|Qori|anak dari|Joko|2.0
