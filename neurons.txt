@@ -1,24 +1,3 @@
-NEURON|Kue Coklat|Produk akhir - kue coklat dua lapis dengan topping ganache
-NEURON|Adonan Dasar|Campuran adonan dasar sebelum dipanggang
-NEURON|Ganache|Lapisan topping cokelat di atas kue
-NEURON|Tepung Terigu|Bahan dasar tepung protein sedang
-NEURON|Gula Pasir|Pemanis utama adonan
-NEURON|Telur|Bahan pengikat dan pengembang adonan
-NEURON|Mentega|Bahan lemak untuk tekstur adonan
-NEURON|Coklat Batang|Bahan dasar cokelat untuk ganache
-NEURON|Krim Kental|Bahan cair pencampur ganache
-NEURON|Susu Sapi|Bahan dasar pembuatan krim kental
-NEURON|Kakao|Bahan dasar pembuatan coklat batang
-LINK|Kue Coklat|mengandung|Adonan Dasar|1.0
-LINK|Kue Coklat|mengandung|Ganache|1.0
-LINK|Adonan Dasar|mengandung|Tepung Terigu|1.0
-LINK|Adonan Dasar|mengandung|Gula Pasir|1.0
-LINK|Adonan Dasar|mengandung|Telur|1.0
-LINK|Adonan Dasar|mengandung|Mentega|1.0
-LINK|Ganache|mengandung|Coklat Batang|1.0
-LINK|Ganache|mengandung|Krim Kental|1.0
-LINK|Krim Kental|mengandung|Susu Sapi|1.0
-LINK|Coklat Batang|mengandung|Kakao|1.0
 NEURON|Hasan|Generasi 1 - Kepala keluarga besar, lahir 1940
 NEURON|Fatimah|Generasi 1 - Istri Hasan, lahir 1943
 NEURON|Rahman|Generasi 2 - Anak pertama Hasan & Fatimah, lahir 1965

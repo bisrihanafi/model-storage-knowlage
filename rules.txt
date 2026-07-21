@@ -11,17 +11,6 @@
 # =========================================================================
 
 # --- Domain: Silsilah Keluarga ---
-#Gen 1:  Hasan ═══ Fatimah
-#              │
-#   ┌──────────┼──────────────┐
-#Gen 2: Rahman═Yuni    Salamah═Dedi    Karim═Nita
-#          │               │              │
-#   ┌──────┴──────┐        │       ┌──────┴──────┐
-#Gen 3: Agus═Citra  Bella═Doni    Eka═Farhan  Gilang═Ira  Hana═Joko
-#         │            │             │           │           │
-#Gen 4: Kevin,Lina    Made          Nadia       Oscar      Putri,Qori
-#
-#
 CHAIN|kakek/nenek dari|anak dari|anak dari|false
 CHAIN|cucu dari|orang tua dari|orang tua dari|false
 CHAIN|saudara dari|anak dari|orang tua dari|true
