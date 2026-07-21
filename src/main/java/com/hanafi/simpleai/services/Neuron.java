@@ -10,8 +10,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Satu neuron / satu entitas pengetahuan di dalam jaringan.
- * Contoh: "Saya", "Mobil", "Hasan", "Kue Coklat".
+ * Satu neuron / satu entitas pengetahuan di dalam jaringan. Contoh: "Saya",
+ * "Mobil", "Hasan", "Kue Coklat".
  *
  * Sebuah neuron menyimpan isi/deskripsinya sendiri, dan daftar relasi KELUAR
  * (edge) di mana neuron ini berperan sebagai SUBJEK.
@@ -39,17 +39,26 @@ public class Neuron {
         this.content = content;
     }
 
-    /** Daftar relasi keluar (read-only) - gunakan tambahRelasiKeluar() untuk menambah. */
+    /**
+     * Daftar relasi keluar (read-only) - gunakan tambahRelasiKeluar() untuk
+     * menambah.
+     */
     public List<Edge> getOutgoing() {
         return Collections.unmodifiableList(outgoing);
     }
 
-    /** Dipakai secara internal oleh KnowledgeGraphService saat membangun/memuat relasi. */
+    /**
+     * Dipakai secara internal oleh KnowledgeGraphService saat membangun/memuat
+     * relasi.
+     */
     void tambahRelasiKeluar(Edge edge) {
         outgoing.add(edge);
     }
 
-    /** Dipakai secara internal saat menghapus neuron lain yang jadi target relasi ini. */
+    /**
+     * Dipakai secara internal saat menghapus neuron lain yang jadi target
+     * relasi ini.
+     */
     void hapusRelasiKeKe(String targetId) {
         outgoing.removeIf(edge -> edge.getTargetId().equals(targetId));
     }
