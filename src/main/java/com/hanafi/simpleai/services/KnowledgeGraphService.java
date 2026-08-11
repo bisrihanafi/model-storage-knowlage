@@ -478,6 +478,10 @@ public class KnowledgeGraphService {
         }
     }
 
+    /** Satu hasil pencocokan: aturan bernama 'namaAturan' berhasil menghubungkan asalId ke tujuanId. */
+    public record AturanCocok(String namaAturan, String asalId, String tujuanId) {
+    }
+
     /** Menghitung hasil satu aturan turunan (mis. "kakek/nenek dari") untuk satu neuron subjek. */
     public List<Neuron> cariRelasiTurunan(String subjekId, String namaAturan) {
         getNeuron(subjekId); // validasi subjek ada
@@ -493,6 +497,36 @@ public class KnowledgeGraphService {
         for (String id : idHasil) {
             Neuron n = neurons.get(id);
             if (n != null) hasil.add(n);
+        }
+        return hasil;
+    }
+
+    /**
+     * Mencoba SEMUA aturan yang ada di rules.txt satu per satu, dari kedua arah
+     * (idA->idB dan idB->idA), untuk menemukan aturan mana saja yang berhasil
+     * menghubungkan dua neuron ini - meski relasinya tidak langsung tersimpan.
+     *
+     * Cocok untuk kasus seperti "Qori dan Hasan" yang terhubung 3 langkah
+     * (anak dari -> anak dari -> anak dari), asalkan ada aturan TRANSITIVE
+     * yang menjangkau kedalaman itu (mis. "leluhur dari").
+     */
+    public List<AturanCocok> cariAturanYangMenghubungkan(String idA, String idB) {
+        getNeuron(idA);
+        getNeuron(idB);
+
+        List<AturanCocok> hasil = new ArrayList<>();
+        for (Aturan aturan : aturanMap.values()) {
+            String key = aturan.getNama().toLowerCase();
+
+            Set<String> hasilDariA = hitungRelasiTurunan(idA, key, 0);
+            if (hasilDariA.contains(idB)) {
+                hasil.add(new AturanCocok(aturan.getNama(), idA, idB));
+            }
+
+            Set<String> hasilDariB = hitungRelasiTurunan(idB, key, 0);
+            if (hasilDariB.contains(idA)) {
+                hasil.add(new AturanCocok(aturan.getNama(), idB, idA));
+            }
         }
         return hasil;
     }

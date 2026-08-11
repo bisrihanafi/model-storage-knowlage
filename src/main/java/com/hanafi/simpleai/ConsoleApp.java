@@ -70,7 +70,9 @@ public class ConsoleApp {
                         menuTambahAturan();
                     case "13" ->
                         menuCariRelasiAntara();
-                    case "14" -> {
+                    case "14" ->
+                        menuCariAturanPenghubung();
+                    case "15" -> {
                         berjalan = false;
                         System.out.println("Jaringan disimpan. Sampai jumpa!");
                     }
@@ -99,7 +101,8 @@ public class ConsoleApp {
         System.out.println("11. Lihat daftar aturan yang tersedia");
         System.out.println("12. Tambah aturan baru");
         System.out.println("13. Cari relasi antara dua neuron (dua arah)");
-        System.out.println("14. Keluar");
+        System.out.println("14. Cari aturan yang menghubungkan dua neuron");
+        System.out.println("15. Keluar");
         System.out.print("Pilih menu: ");
     }
 
@@ -369,6 +372,25 @@ public class ConsoleApp {
         }
         for (KnowledgeGraphService.Fakta f : hasil) {
             System.out.printf("%s --[%s, bobot %.2f]--> %s%n", f.subjekId(), f.predikat(), f.bobot(), f.objekId());
+        }
+    }
+
+    private void menuCariAturanPenghubung() {
+        System.out.print("ID neuron pertama: ");
+        String idA = scanner.nextLine().trim();
+
+        System.out.print("ID neuron kedua: ");
+        String idB = scanner.nextLine().trim();
+
+        List<KnowledgeGraphService.AturanCocok> hasil = service.cariAturanYangMenghubungkan(idA, idB);
+
+        System.out.println("\n>> Aturan yang menghubungkan " + idA + " dan " + idB + ":");
+        if (hasil.isEmpty()) {
+            System.out.println("(Tidak ada aturan di rules.txt yang cocok menghubungkan keduanya)");
+            return;
+        }
+        for (KnowledgeGraphService.AturanCocok ac : hasil) {
+            System.out.printf("%s adalah \"%s\" dari %s%n", ac.tujuanId(), ac.namaAturan(), ac.asalId());
         }
     }
 

@@ -6,5 +6,4 @@ CHAIN|paman/bibi dari|anak dari|saudara dari|false
 CHAIN|keponakan dari|saudara dari|orang tua dari|false
 CHAIN|besan dengan|orang tua dari|mertua dari|false
 TRANSITIVE|semua bahan dari|mengandung
-TRANSITIVE|keturunan dari|anak dari
 CHAIN|buyut dari|kakek/nenek dari|anak dari|false
