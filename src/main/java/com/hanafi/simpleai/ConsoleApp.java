@@ -14,11 +14,10 @@ import java.util.Scanner;
 
 /**
  * Aplikasi menu di terminal untuk Digital Neuron AI.
- * <pre>
+ *
  * Kelas ini HANYA menangani input dari user dan menampilkan output ke layar.
  * Semua logika (validasi, penyimpanan, query, rule engine) ada di
  * KnowledgeGraphService - kelas ini cuma "pengemudi" yang memanggilnya.
- * </pre>
  */
 public class ConsoleApp {
 
@@ -69,7 +68,9 @@ public class ConsoleApp {
                         menuLihatDaftarAturan();
                     case "12" ->
                         menuTambahAturan();
-                    case "13" -> {
+                    case "13" ->
+                        menuCariRelasiAntara();
+                    case "14" -> {
                         berjalan = false;
                         System.out.println("Jaringan disimpan. Sampai jumpa!");
                     }
@@ -97,7 +98,8 @@ public class ConsoleApp {
         System.out.println("10. Cari relasi turunan (berdasarkan rules.txt)");
         System.out.println("11. Lihat daftar aturan yang tersedia");
         System.out.println("12. Tambah aturan baru");
-        System.out.println("13. Keluar");
+        System.out.println("13. Cari relasi antara dua neuron (dua arah)");
+        System.out.println("14. Keluar");
         System.out.print("Pilih menu: ");
     }
 
@@ -349,6 +351,25 @@ public class ConsoleApp {
 
         Aturan aturanBaru = service.tambahAturan(nama, tipe, predikat1, predikat2, excludeSelf);
         System.out.println("\nAturan berhasil ditambahkan: " + aturanBaru);
+    }
+
+    private void menuCariRelasiAntara() {
+        System.out.print("ID neuron pertama: ");
+        String idA = scanner.nextLine().trim();
+
+        System.out.print("ID neuron kedua: ");
+        String idB = scanner.nextLine().trim();
+
+        List<KnowledgeGraphService.Fakta> hasil = service.cariRelasiAntara(idA, idB);
+
+        System.out.println("\n>> Relasi antara " + idA + " dan " + idB + ":");
+        if (hasil.isEmpty()) {
+            System.out.println("(Tidak ada relasi langsung di antara keduanya)");
+            return;
+        }
+        for (KnowledgeGraphService.Fakta f : hasil) {
+            System.out.printf("%s --[%s, bobot %.2f]--> %s%n", f.subjekId(), f.predikat(), f.bobot(), f.objekId());
+        }
     }
 
     // ================= HELPER TAMPILAN =================

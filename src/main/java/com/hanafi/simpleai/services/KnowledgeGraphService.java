@@ -5,6 +5,7 @@
 package com.hanafi.simpleai.services;
 
 import com.hanafi.simpleai.exception.KnowledgeGraphException;
+import com.hanafi.simpleai.exception.KnowledgeNotFoundException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,16 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
- * 
  * Core engine dari Digital Neuron AI.
  *
  * Kelas ini SENGAJA tidak punya dependensi ke Scanner atau System.out - semua
  * method menerima parameter biasa dan mengembalikan objek Java biasa (List,
  * Neuron, Edge, dst), atau melempar KnowledgeGraphException kalau ada error.
  *
- * <pre>
  * Dengan begitu kelas ini bisa dipakai persis sama oleh:
  *   - ConsoleApp (aplikasi menu di terminal)
  *   - REST API controller (nanti, mis. Spring Boot @RestController)
@@ -39,7 +37,6 @@ import java.util.Set;
  * Data disimpan di dua file:
  *   - neuronsFilePath : fakta dasar (NEURON / LINK), format sama seperti sebelumnya
  *   - rulesFilePath   : aturan komposisi/relasi turunan (CHAIN / TRANSITIVE)
- * </pre>
  */
 public class KnowledgeGraphService {
 
@@ -192,7 +189,7 @@ public class KnowledgeGraphService {
     public Neuron getNeuron(String id) {
         Neuron n = neurons.get(id);
         if (n == null) {
-            throw new KnowledgeGraphException("Neuron '" + id + "' tidak ditemukan.");
+            throw new KnowledgeNotFoundException("Neuron '" + id + "' tidak ditemukan.");
         }
         return n;
     }
@@ -207,7 +204,7 @@ public class KnowledgeGraphService {
 
     public void hapusNeuron(String id) {
         if (neurons.remove(id) == null) {
-            throw new KnowledgeGraphException("Neuron '" + id + "' tidak ditemukan.");
+            throw new KnowledgeNotFoundException("Neuron '" + id + "' tidak ditemukan.");
         }
         for (Neuron n : neurons.values()) {
             n.hapusRelasiKeKe(id);
@@ -344,6 +341,29 @@ public class KnowledgeGraphService {
     }
 
     /**
+     * Diketahui DUA neuron, cari semua relasi LANGSUNG di antara keduanya,
+     * dari kedua arah (A->B maupun B->A). Tidak menelusuri relasi turunan
+     * (predicate composition) - hanya fakta yang benar-benar tersimpan.
+     */
+    public List<Fakta> cariRelasiAntara(String idA, String idB) {
+        Neuron a = getNeuron(idA);
+        Neuron b = getNeuron(idB);
+
+        List<Fakta> hasil = new ArrayList<>();
+        for (Edge e : a.getOutgoing()) {
+            if (e.getTargetId().equalsIgnoreCase(idB)) {
+                hasil.add(new Fakta(a.getId(), e.getLabel(), b.getId(), e.getWeight()));
+            }
+        }
+        for (Edge e : b.getOutgoing()) {
+            if (e.getTargetId().equalsIgnoreCase(idA)) {
+                hasil.add(new Fakta(b.getId(), e.getLabel(), a.getId(), e.getWeight()));
+            }
+        }
+        return hasil;
+    }
+
+    /**
      * Menjelajah (BFS) semua relasi keluar dari satu neuron sampai kedalaman tertentu,
      * lalu memperkuat bobot tiap relasi yang dilalui (efek Hebbian).
      */
@@ -464,7 +484,7 @@ public class KnowledgeGraphService {
 
         String key = namaAturan.toLowerCase();
         if (!aturanMap.containsKey(key)) {
-            throw new KnowledgeGraphException("Aturan '" + namaAturan + "' tidak ditemukan di rules.txt.");
+            throw new KnowledgeNotFoundException("Aturan '" + namaAturan + "' tidak ditemukan di rules.txt.");
         }
 
         Set<String> idHasil = hitungRelasiTurunan(subjekId, key, 0);

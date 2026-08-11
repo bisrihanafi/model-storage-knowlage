@@ -4,7 +4,6 @@
  */
 package com.hanafi.simpleai.services;
 
-import com.hanafi.simpleai.services.Edge;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

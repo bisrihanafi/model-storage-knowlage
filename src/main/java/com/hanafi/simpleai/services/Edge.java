@@ -5,8 +5,8 @@
 package com.hanafi.simpleai.services;
 
 /**
- * Satu relasi berarah dari satu neuron (subjek) ke neuron lain (objek),
- * dengan label (predikat) dan bobot (kekuatan relasi).
+ * Satu relasi berarah dari satu neuron (subjek) ke neuron lain (objek), dengan
+ * label (predikat) dan bobot (kekuatan relasi).
  *
  * Contoh: (Saya) --[memiliki, bobot 1.0]--> (Mobil)
  */
@@ -34,7 +34,10 @@ public class Edge {
         return weight;
     }
 
-    /** Memperkuat bobot relasi ini, dipakai saat neuron diaktifkan (efek Hebbian). */
+    /**
+     * Memperkuat bobot relasi ini, dipakai saat neuron diaktifkan (efek
+     * Hebbian).
+     */
     void perkuatBobot(double tambahan) {
         this.weight += tambahan;
     }

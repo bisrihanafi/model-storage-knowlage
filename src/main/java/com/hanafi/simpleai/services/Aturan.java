@@ -6,13 +6,11 @@ package com.hanafi.simpleai.services;
 
 /**
  * Definisi satu aturan komposisi (relasi turunan), dibaca dari rules.txt.
- * <pre>
- * Dua tipe aturan yang didukung:
- *   CHAIN       - menyambung 2 predikat berurutan (boleh beda) jadi relasi baru.
- *                 Contoh: kakek/nenek dari = (anak dari) lalu (anak dari).
- *   TRANSITIVE  - menelusuri 1 predikat yang sama berulang kali sampai habis.
- *                 Contoh: semua bahan dari = transitive closure dari "mengandung".
- * </pre>
+ *
+ * Dua tipe aturan yang didukung: CHAIN - menyambung 2 predikat berurutan (boleh
+ * beda) jadi relasi baru. Contoh: kakek/nenek dari = (anak dari) lalu (anak
+ * dari). TRANSITIVE - menelusuri 1 predikat yang sama berulang kali sampai
+ * habis. Contoh: semua bahan dari = transitive closure dari "mengandung".
  *
  * predikat1/predikat2 boleh berupa predikat mentah dari data, ATAU nama aturan
  * lain, sehingga aturan bisa disusun bertingkat.
