@@ -29,14 +29,15 @@ import java.util.Set;
  * method menerima parameter biasa dan mengembalikan objek Java biasa (List,
  * Neuron, Edge, dst), atau melempar KnowledgeGraphException kalau ada error.
  *
- * Dengan begitu kelas ini bisa dipakai persis sama oleh:
- *   - ConsoleApp (aplikasi menu di terminal)
- *   - REST API controller (nanti, mis. Spring Boot @RestController)
- *   - kode Java lain mana pun yang butuh fungsi knowledge graph ini
+ * Dengan begitu kelas ini bisa dipakai persis sama oleh: - ConsoleApp (aplikasi
+ * menu di terminal) - REST API controller (nanti, mis. Spring Boot
  *
- * Data disimpan di dua file:
- *   - neuronsFilePath : fakta dasar (NEURON / LINK), format sama seperti sebelumnya
- *   - rulesFilePath   : aturan komposisi/relasi turunan (CHAIN / TRANSITIVE)
+ * @RestController) - kode Java lain mana pun yang butuh fungsi knowledge graph
+ * ini
+ *
+ * Data disimpan di dua file: - neuronsFilePath : fakta dasar (NEURON / LINK),
+ * format sama seperti sebelumnya - rulesFilePath : aturan komposisi/relasi
+ * turunan (CHAIN / TRANSITIVE)
  */
 public class KnowledgeGraphService {
 
@@ -63,30 +64,42 @@ public class KnowledgeGraphService {
     // =====================================================================
     // DATA TRANSFER OBJECTS (record) - dipakai sebagai bentuk hasil query
     // =====================================================================
-
-    /** Satu fakta lengkap (Subjek, Predikat, Objek, Bobot), dipakai untuk menampilkan seluruh jaringan. */
+    /**
+     * Satu fakta lengkap (Subjek, Predikat, Objek, Bobot), dipakai untuk
+     * menampilkan seluruh jaringan.
+     */
     public record Fakta(String subjekId, String predikat, String objekId, double bobot) {
+
     }
 
-    /** Satu langkah hasil penjelajahan (aktivasi) neuron. */
+    /**
+     * Satu langkah hasil penjelajahan (aktivasi) neuron.
+     */
     public record LangkahAktivasi(String asalId, String predikat, String tujuanId, int kedalaman) {
+
     }
 
     // =====================================================================
     // LIFECYCLE: load & save
     // =====================================================================
-
-    /** Memuat data neuron & fakta dari file. Aman dipanggil walau file belum ada. */
+    /**
+     * Memuat data neuron & fakta dari file. Aman dipanggil walau file belum
+     * ada.
+     */
     public void muatData() {
         File file = new File(neuronsFilePath);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            return;
+        }
 
         List<String[]> pendingLinks = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue;
+                if (line.isBlank()) {
+                    continue;
+                }
                 String[] parts = line.split("\\|", 5);
 
                 if (parts[0].equals("NEURON") && parts.length >= 3) {
@@ -113,19 +126,23 @@ public class KnowledgeGraphService {
 
     /**
      * Memuat aturan komposisi dari rules.txt. Format per baris:
-     *   CHAIN|namaAturan|predikat1|predikat2|excludeSelf(true/false)
-     *   TRANSITIVE|namaAturan|predikat
-     * Baris kosong atau diawali '#' diabaikan (komentar). Aman kalau file belum ada.
+     * CHAIN|namaAturan|predikat1|predikat2|excludeSelf(true/false)
+     * TRANSITIVE|namaAturan|predikat Baris kosong atau diawali '#' diabaikan
+     * (komentar). Aman kalau file belum ada.
      */
     public void muatAturan() {
         File file = new File(rulesFilePath);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            return;
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) continue;
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
 
                 String[] parts = line.split("\\|");
                 if (parts[0].equalsIgnoreCase("CHAIN") && parts.length >= 4) {
@@ -142,7 +159,10 @@ public class KnowledgeGraphService {
         }
     }
 
-    /** Menyimpan seluruh neuron & fakta ke file (dipanggil otomatis tiap ada perubahan data). */
+    /**
+     * Menyimpan seluruh neuron & fakta ke file (dipanggil otomatis tiap ada
+     * perubahan data).
+     */
     private void simpanData() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(neuronsFilePath))) {
             for (Neuron n : neurons.values()) {
@@ -171,7 +191,6 @@ public class KnowledgeGraphService {
     // =====================================================================
     // CRUD NEURON
     // =====================================================================
-
     public Neuron tambahNeuron(String id, String content) {
         if (id == null || id.isBlank()) {
             throw new KnowledgeGraphException("ID neuron tidak boleh kosong.");
@@ -185,7 +204,13 @@ public class KnowledgeGraphService {
         return neuron;
     }
 
-    /** Mengambil satu neuron berdasarkan ID. Melempar exception kalau tidak ditemukan. */
+    /**
+     * Mengambil satu neuron berdasarkan ID.Melempar exception kalau tidak
+     * ditemukan.
+     *
+     * @param id
+     * @return
+     */
     public Neuron getNeuron(String id) {
         Neuron n = neurons.get(id);
         if (n == null) {
@@ -215,7 +240,6 @@ public class KnowledgeGraphService {
     // =====================================================================
     // RELASI DASAR (TRIPLE)
     // =====================================================================
-
     public Edge tambahRelasi(String subjekId, String predikat, String objekId, Double bobot) {
         Neuron subjek = getNeuron(subjekId); // otomatis lempar exception kalau tidak ada
         getNeuron(objekId);
@@ -230,7 +254,11 @@ public class KnowledgeGraphService {
         return edge;
     }
 
-    /** Semua fakta (Subjek, Predikat, Objek, Bobot) di seluruh jaringan. */
+    /**
+     * Semua fakta (Subjek, Predikat, Objek, Bobot) di seluruh jaringan.
+     *
+     * @return
+     */
     public List<Fakta> getSemuaFakta() {
         List<Fakta> hasil = new ArrayList<>();
         for (Neuron n : neurons.values()) {
@@ -244,13 +272,17 @@ public class KnowledgeGraphService {
     // =====================================================================
     // FAKTA MAJEMUK (REIFIKASI)
     // =====================================================================
-
     /**
-     * Membuat neuron "peristiwa" baru dan menghubungkannya dari subjek.
-     * Dipakai saat satu fakta butuh banyak detail sekaligus (mis. riwayat kerja).
+     * Membuat neuron "peristiwa" baru dan menghubungkannya dari subjek.Dipakai
+     * saat satu fakta butuh banyak detail sekaligus (mis.riwayat kerja).
      *
-     * @param eventId ID kustom untuk peristiwa, atau null/kosong untuk auto-generate.
-     * @return ID peristiwa yang dipakai (baik kustom maupun hasil auto-generate).
+     * @param subjekId
+     * @param predikatUtama
+     * @param eventId ID kustom untuk peristiwa, atau null/kosong untuk
+     * auto-generate.
+     * @param deskripsi
+     * @return ID peristiwa yang dipakai (baik kustom maupun hasil
+     * auto-generate).
      */
     public String buatPeristiwa(String subjekId, String predikatUtama, String eventId, String deskripsi) {
         getNeuron(subjekId);
@@ -274,8 +306,14 @@ public class KnowledgeGraphService {
     }
 
     /**
-     * Menambahkan satu detail ke peristiwa yang sudah dibuat lewat buatPeristiwa().
-     * Kalau neuron objek belum ada, akan dibuat otomatis dengan deskripsiObjekBaru.
+     * Menambahkan satu detail ke peristiwa yang sudah dibuat lewat
+     * buatPeristiwa().Kalau neuron objek belum ada, akan dibuat otomatis dengan
+     * deskripsiObjekBaru.
+     *
+     * @param eventId
+     * @param predikat
+     * @param objekId
+     * @param deskripsiObjekBaru
      */
     public void tambahDetailPeristiwa(String eventId, String predikat, String objekId, String deskripsiObjekBaru) {
         Neuron event = getNeuron(eventId);
@@ -312,21 +350,35 @@ public class KnowledgeGraphService {
     // =====================================================================
     // QUERY DASAR
     // =====================================================================
-
-    /** Diketahui SUBJEK + PREDIKAT, cari OBJEK (beserta detailnya jika neuron perantara/event). */
+    /**
+     * Diketahui SUBJEK + PREDIKAT, cari OBJEK (beserta detailnya jika neuron
+     * perantara/event).
+     *
+     * @param subjekId
+     * @param predikat
+     * @return
+     */
     public List<Neuron> cariObjek(String subjekId, String predikat) {
         Neuron subjek = getNeuron(subjekId);
         List<Neuron> hasil = new ArrayList<>();
         for (Edge e : subjek.getOutgoing()) {
             if (e.getLabel().equalsIgnoreCase(predikat)) {
                 Neuron objek = neurons.get(e.getTargetId());
-                if (objek != null) hasil.add(objek);
+                if (objek != null) {
+                    hasil.add(objek);
+                }
             }
         }
         return hasil;
     }
 
-    /** Diketahui PREDIKAT + OBJEK, cari SUBJEK. */
+    /**
+     * Diketahui PREDIKAT + OBJEK, cari SUBJEK.
+     *
+     * @param predikat
+     * @param objekId
+     * @return
+     */
     public List<Neuron> cariSubjek(String predikat, String objekId) {
         List<Neuron> hasil = new ArrayList<>();
         for (Neuron n : neurons.values()) {
@@ -341,9 +393,13 @@ public class KnowledgeGraphService {
     }
 
     /**
-     * Diketahui DUA neuron, cari semua relasi LANGSUNG di antara keduanya,
-     * dari kedua arah (A->B maupun B->A). Tidak menelusuri relasi turunan
-     * (predicate composition) - hanya fakta yang benar-benar tersimpan.
+     * Diketahui DUA neuron, cari semua relasi LANGSUNG di antara keduanya, dari
+     * kedua arah (A->B maupun B->A).Tidak menelusuri relasi turunan (predicate
+     * composition) - hanya fakta yang benar-benar tersimpan.
+     *
+     * @param idA
+     * @param idB
+     * @return
      */
     public List<Fakta> cariRelasiAntara(String idA, String idB) {
         Neuron a = getNeuron(idA);
@@ -364,8 +420,11 @@ public class KnowledgeGraphService {
     }
 
     /**
-     * Menjelajah (BFS) semua relasi keluar dari satu neuron sampai kedalaman tertentu,
-     * lalu memperkuat bobot tiap relasi yang dilalui (efek Hebbian).
+     * Menjelajah (BFS) semua relasi keluar dari satu neuron sampai kedalaman
+     * tertentu, lalu memperkuat bobot tiap relasi yang dilalui (efek Hebbian).
+     *
+     * @param startId
+     * @return
      */
     public List<LangkahAktivasi> aktivasiNeuron(String startId) {
         return aktivasiNeuron(startId, 3);
@@ -388,14 +447,18 @@ public class KnowledgeGraphService {
         while (!queue.isEmpty()) {
             String currentId = queue.poll();
             int depth = depthMap.get(currentId);
-            if (depth >= maxDepth) continue;
+            if (depth >= maxDepth) {
+                continue;
+            }
 
             Neuron current = neurons.get(currentId);
             List<Edge> edges = new ArrayList<>(current.getOutgoing());
             edges.sort((e1, e2) -> Double.compare(e2.getWeight(), e1.getWeight()));
 
             for (Edge edge : edges) {
-                if (!neurons.containsKey(edge.getTargetId())) continue;
+                if (!neurons.containsKey(edge.getTargetId())) {
+                    continue;
+                }
 
                 hasil.add(new LangkahAktivasi(currentId, edge.getLabel(), edge.getTargetId(), depth + 1));
                 dilewati.add(edge);
@@ -421,12 +484,16 @@ public class KnowledgeGraphService {
     // =====================================================================
     // RULE ENGINE (RELASI TURUNAN / PREDICATE COMPOSITION)
     // =====================================================================
-
     public List<Aturan> getSemuaAturan() {
         return new ArrayList<>(aturanMap.values());
     }
 
-    /** Semua predikat unik yang pernah dipakai di data, dipakai sebagai referensi saat membuat aturan baru. */
+    /**
+     * Semua predikat unik yang pernah dipakai di data, dipakai sebagai
+     * referensi saat membuat aturan baru.
+     *
+     * @return
+     */
     public List<String> getSemuaPredikat() {
         Set<String> hasil = new LinkedHashSet<>();
         for (Neuron n : neurons.values()) {
@@ -438,8 +505,16 @@ public class KnowledgeGraphService {
     }
 
     /**
-     * Menambahkan aturan komposisi baru dan langsung menyimpannya ke rules.txt.
-     * predikat2 wajib diisi untuk tipe CHAIN, dan diabaikan untuk tipe TRANSITIVE.
+     * Menambahkan aturan komposisi baru dan langsung menyimpannya ke
+     * rules.txt.predikat2 wajib diisi untuk tipe CHAIN, dan diabaikan untuk
+     * tipe TRANSITIVE.
+     *
+     * @param nama
+     * @param tipe
+     * @param predikat1
+     * @param predikat2
+     * @param excludeSelf
+     * @return
      */
     public Aturan tambahAturan(String nama, Aturan.Tipe tipe, String predikat1, String predikat2, boolean excludeSelf) {
         if (nama == null || nama.isBlank()) {
@@ -462,7 +537,9 @@ public class KnowledgeGraphService {
         return aturan;
     }
 
-    /** Menulis ulang seluruh rules.txt dari isi aturanMap saat ini. */
+    /**
+     * Menulis ulang seluruh rules.txt dari isi aturanMap saat ini.
+     */
     private void simpanAturan() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(rulesFilePath))) {
             for (Aturan a : aturanMap.values()) {
@@ -478,11 +555,22 @@ public class KnowledgeGraphService {
         }
     }
 
-    /** Satu hasil pencocokan: aturan bernama 'namaAturan' berhasil menghubungkan asalId ke tujuanId. */
+    /**
+     * Satu hasil pencocokan: aturan bernama 'namaAturan' berhasil menghubungkan
+     * asalId ke tujuanId.
+     */
     public record AturanCocok(String namaAturan, String asalId, String tujuanId) {
+
     }
 
-    /** Menghitung hasil satu aturan turunan (mis. "kakek/nenek dari") untuk satu neuron subjek. */
+    /**
+     * Menghitung hasil satu aturan turunan (mis."kakek/nenek dari") untuk satu
+     * neuron subjek.
+     *
+     * @param subjekId
+     * @param namaAturan
+     * @return
+     */
     public List<Neuron> cariRelasiTurunan(String subjekId, String namaAturan) {
         getNeuron(subjekId); // validasi subjek ada
 
@@ -496,7 +584,9 @@ public class KnowledgeGraphService {
         List<Neuron> hasil = new ArrayList<>();
         for (String id : idHasil) {
             Neuron n = neurons.get(id);
-            if (n != null) hasil.add(n);
+            if (n != null) {
+                hasil.add(n);
+            }
         }
         return hasil;
     }
@@ -504,11 +594,14 @@ public class KnowledgeGraphService {
     /**
      * Mencoba SEMUA aturan yang ada di rules.txt satu per satu, dari kedua arah
      * (idA->idB dan idB->idA), untuk menemukan aturan mana saja yang berhasil
-     * menghubungkan dua neuron ini - meski relasinya tidak langsung tersimpan.
+     * menghubungkan dua neuron ini - meski relasinya tidak langsung
+     * tersimpan.Cocok untuk kasus seperti "Qori dan Hasan" yang terhubung 3
+     * langkah (anak dari -> anak dari -> anak dari), asalkan ada aturan
+     * TRANSITIVE yang menjangkau kedalaman itu (mis."leluhur dari").
      *
-     * Cocok untuk kasus seperti "Qori dan Hasan" yang terhubung 3 langkah
-     * (anak dari -> anak dari -> anak dari), asalkan ada aturan TRANSITIVE
-     * yang menjangkau kedalaman itu (mis. "leluhur dari").
+     * @param idA
+     * @param idB
+     * @return
      */
     public List<AturanCocok> cariAturanYangMenghubungkan(String idA, String idB) {
         getNeuron(idA);
@@ -531,10 +624,15 @@ public class KnowledgeGraphService {
         return hasil;
     }
 
-    /** Semua target langsung dari subjek dengan predikat mentah (exact match, case-insensitive). */
+    /**
+     * Semua target langsung dari subjek dengan predikat mentah (exact match,
+     * case-insensitive).
+     */
     private List<String> targetDenganPredikat(String subjekId, String predikat) {
         Neuron n = neurons.get(subjekId);
-        if (n == null) return Collections.emptyList();
+        if (n == null) {
+            return Collections.emptyList();
+        }
 
         List<String> hasil = new ArrayList<>();
         for (Edge e : n.getOutgoing()) {
@@ -546,11 +644,13 @@ public class KnowledgeGraphService {
     }
 
     /**
-     * Menyelesaikan target dari sebuah "predikat" yang bisa berupa predikat mentah
-     * ATAU nama aturan lain, sehingga aturan bisa disusun bertingkat.
+     * Menyelesaikan target dari sebuah "predikat" yang bisa berupa predikat
+     * mentah ATAU nama aturan lain, sehingga aturan bisa disusun bertingkat.
      */
     private Set<String> resolveTargets(String subjekId, String predikatAtauAturan, int depth) {
-        if (depth > MAX_KEDALAMAN_ATURAN) return Collections.emptySet();
+        if (depth > MAX_KEDALAMAN_ATURAN) {
+            return Collections.emptySet();
+        }
 
         String key = predikatAtauAturan.toLowerCase();
         if (aturanMap.containsKey(key)) {
@@ -559,7 +659,9 @@ public class KnowledgeGraphService {
         return new LinkedHashSet<>(targetDenganPredikat(subjekId, predikatAtauAturan));
     }
 
-    /** Menghitung hasil satu aturan (CHAIN atau TRANSITIVE) untuk satu subjek. */
+    /**
+     * Menghitung hasil satu aturan (CHAIN atau TRANSITIVE) untuk satu subjek.
+     */
     private Set<String> hitungRelasiTurunan(String subjekId, String namaAturanLower, int depth) {
         Aturan aturan = aturanMap.get(namaAturanLower);
         if (aturan == null || depth > MAX_KEDALAMAN_ATURAN) {
@@ -567,8 +669,10 @@ public class KnowledgeGraphService {
         }
 
         return switch (aturan.getTipe()) {
-            case CHAIN -> hitungChain(subjekId, aturan, depth);
-            case TRANSITIVE -> hitungTransitive(subjekId, aturan, depth);
+            case CHAIN ->
+                hitungChain(subjekId, aturan, depth);
+            case TRANSITIVE ->
+                hitungTransitive(subjekId, aturan, depth);
         };
     }
 

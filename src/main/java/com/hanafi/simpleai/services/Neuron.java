@@ -41,6 +41,7 @@ public class Neuron {
     /**
      * Daftar relasi keluar (read-only) - gunakan tambahRelasiKeluar() untuk
      * menambah.
+     * @return 
      */
     public List<Edge> getOutgoing() {
         return Collections.unmodifiableList(outgoing);

@@ -37,53 +37,54 @@ public class ConsoleApp {
     }
 
     public void run() {
-        boolean berjalan = true;
-        while (berjalan) {
-            tampilkanMenu();
-            String pilihan = scanner.nextLine().trim();
+        try (scanner) {
+            boolean berjalan = true;
+            while (berjalan) {
+                tampilkanMenu();
+                String pilihan = scanner.nextLine().trim();
 
-            try {
-                switch (pilihan) {
-                    case "1" ->
-                        menuTambahNeuron();
-                    case "2" ->
-                        menuTambahRelasi();
-                    case "3" ->
-                        menuTambahFaktaMajemuk();
-                    case "4" ->
-                        menuCariObjek();
-                    case "5" ->
-                        menuCariSubjek();
-                    case "6" ->
-                        menuLihatInformasiNeuron();
-                    case "7" ->
-                        menuAktivasiNeuron();
-                    case "8" ->
-                        menuTampilkanJaringan();
-                    case "9" ->
-                        menuHapusNeuron();
-                    case "10" ->
-                        menuCariRelasiTurunan();
-                    case "11" ->
-                        menuLihatDaftarAturan();
-                    case "12" ->
-                        menuTambahAturan();
-                    case "13" ->
-                        menuCariRelasiAntara();
-                    case "14" ->
-                        menuCariAturanPenghubung();
-                    case "15" -> {
-                        berjalan = false;
-                        System.out.println("Jaringan disimpan. Sampai jumpa!");
+                try {
+                    switch (pilihan) {
+                        case "1" ->
+                            menuTambahNeuron();
+                        case "2" ->
+                            menuTambahRelasi();
+                        case "3" ->
+                            menuTambahFaktaMajemuk();
+                        case "4" ->
+                            menuCariObjek();
+                        case "5" ->
+                            menuCariSubjek();
+                        case "6" ->
+                            menuLihatInformasiNeuron();
+                        case "7" ->
+                            menuAktivasiNeuron();
+                        case "8" ->
+                            menuTampilkanJaringan();
+                        case "9" ->
+                            menuHapusNeuron();
+                        case "10" ->
+                            menuCariRelasiTurunan();
+                        case "11" ->
+                            menuLihatDaftarAturan();
+                        case "12" ->
+                            menuTambahAturan();
+                        case "13" ->
+                            menuCariRelasiAntara();
+                        case "14" ->
+                            menuCariAturanPenghubung();
+                        case "15" -> {
+                            berjalan = false;
+                            System.out.println("Jaringan disimpan. Sampai jumpa!");
+                        }
+                        default ->
+                            System.out.println("Pilihan tidak dikenali.");
                     }
-                    default ->
-                        System.out.println("Pilihan tidak dikenali.");
+                } catch (KnowledgeGraphException e) {
+                    System.out.println("Gagal: " + e.getMessage());
                 }
-            } catch (KnowledgeGraphException e) {
-                System.out.println("Gagal: " + e.getMessage());
             }
         }
-        scanner.close();
     }
 
     private void tampilkanMenu() {
@@ -426,7 +427,7 @@ public class ConsoleApp {
             return null;
         }
         try {
-            return Double.parseDouble(input);
+            return Double.valueOf(input);
         } catch (NumberFormatException e) {
             System.out.println("Bobot tidak valid, memakai default.");
             return null;
